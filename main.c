@@ -68,9 +68,19 @@ int main()
 		assert(nfa_machine_execute(machine_union, "test") == 0);
 	}
 
+	nfa_machine* machine_concat = nfa_machine_concat(machineA, machineB);
+	{
+		nfa_machine_dump(machine_concat);
+
+		assert(nfa_machine_execute(machine_concat, "abcd") == 1);
+		assert(nfa_machine_execute(machine_concat, "babbababbabbabaaabababcd") == 1);
+		assert(nfa_machine_execute(machine_concat, "cd") == 0);
+	}
+
 	nfa_machine_free(machineA);
 	nfa_machine_free(machineB);
 	nfa_machine_free(machine_union);
+	nfa_machine_free(machine_concat);
 
 	return 0;
 }

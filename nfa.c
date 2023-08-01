@@ -278,24 +278,30 @@ int nfa_machine_execute(const nfa_machine* machine, const char* string)
 	return 0;
 }
 
+size_t get_machine_max_state_index(const nfa_machine* machine)
+{
+	size_t machine_max_state_index = machine->start_state_index;
+
+	for (size_t transition_index = 0; transition_index < machine->transitions_len; ++transition_index)
+	{
+		const nfa_transition* transition = &machine->transitions[transition_index];
+		machine_max_state_index = MAX(machine_max_state_index, transition->from_state_index);
+		machine_max_state_index = MAX(machine_max_state_index, transition->to_state_index);
+	}
+
+	for (size_t final_state_index = 0; final_state_index < machine->final_state_len; ++final_state_index)
+	{
+		machine_max_state_index = MAX(machine_max_state_index, machine->final_states[final_state_index]);
+	}
+
+	return machine_max_state_index;
+}
+
 nfa_machine* nfa_machine_union(const nfa_machine* machine_a, const nfa_machine* machine_b)
 {
 	// we need to offset all the machine_b state indexes because they will overlap with machine_b
 	// find the maximum state index from machine_a to choose as the offset
-	size_t machine_a_max_state_index = machine_a->start_state_index;
-	{
-		for (size_t transition_index = 0; transition_index < machine_a->transitions_len; ++transition_index)
-		{
-			const nfa_transition* transition = &machine_a->transitions[transition_index];
-			machine_a_max_state_index = MAX(machine_a_max_state_index, transition->from_state_index);
-			machine_a_max_state_index = MAX(machine_a_max_state_index, transition->to_state_index);
-		}
-
-		for (size_t final_state_index = 0; final_state_index < machine_a->final_state_len; ++final_state_index)
-		{
-			machine_a_max_state_index = MAX(machine_a_max_state_index, machine_a->final_states[final_state_index]);
-		}
-	}
+	size_t machine_a_max_state_index = get_machine_max_state_index(machine_a);
 
 	// All states need to be offset by at least 1 because we have a new initial state
 	size_t machine_a_state_index_offset = 1;
@@ -346,5 +352,67 @@ nfa_machine* nfa_machine_union(const nfa_machine* machine_a, const nfa_machine* 
 
 nfa_machine* nfa_machine_concat(nfa_machine* machine_a, nfa_machine* machine_b)
 {
-	return NULL;
+	// we need to offset all the machine_b state indexes because they will overlap with machine_b
+	// find the maximum state index from machine_a to choose as the offset
+	size_t machine_a_max_state_index = get_machine_max_state_index(machine_a);
+
+	// All states need to be offset by at least 1 because we have a new initial state
+	size_t machine_b_state_index_offset = machine_a_max_state_index + 1;
+
+	nfa_machine* machine_concat = nfa_machine_alloc();
+	machine_concat->start_state_index = machine_a->start_state_index;
+	machine_concat->final_state_len = machine_b->final_state_len;
+	machine_concat->final_states = malloc(machine_concat->final_state_len * sizeof(int));
+	for (size_t index = 0; index < machine_b->final_state_len; ++index)
+	{
+		machine_concat->final_states[index] = machine_b->final_states[index] + machine_b_state_index_offset;
+	}
+
+	// Copy transitions
+	{
+		// machine_a
+		machine_concat->transitions_len = machine_a->transitions_len;
+		machine_concat->transitions = malloc(machine_concat->transitions_len * sizeof(nfa_transition));
+		memcpy(machine_concat->transitions, machine_a->transitions, machine_a->transitions_len * sizeof(nfa_transition));
+
+		// machine_b
+		for (size_t transition_index = 0; transition_index < machine_b->transitions_len; ++transition_index)
+		{
+			const nfa_transition* transition = &machine_b->transitions[transition_index];
+			nfa_machine_add_transition(machine_concat, transition->from_state_index + machine_b_state_index_offset, transition->to_state_index + machine_b_state_index_offset, transition->rule);
+		}
+	}
+
+	// Add final transition from final states of machine_a to start state of machine_b
+	for (size_t state_index = 0; state_index < machine_a->final_state_len; ++state_index)
+	{
+		nfa_machine_add_transition(machine_concat, machine_a->final_states[state_index], machine_b->start_state_index + machine_b_state_index_offset, NFA_EPSILON);
+	}
+
+	return machine_concat;
+}
+
+void nfa_machine_dump(const nfa_machine* machine)
+{
+	printf("[\n");
+	printf("\tStart Index: %d\n", machine->start_state_index);
+	printf("\tFinal States: [ ");
+	for (size_t index = 0; index < machine->final_state_len; ++index)
+	{
+		printf("%d", machine->final_states[index]);
+		if (index < machine->final_state_len - 1)
+		{
+			printf(", ");
+		}
+	}
+	printf(" ]\n");
+	printf("\tTransitions: [\n");
+	//printf("\t\thi\n");
+	for (size_t index = 0; index < machine->transitions_len; ++index)
+	{
+		const nfa_transition* transition = &machine->transitions[index];
+		printf("\t\t%llu -- %c --> %llu\n", transition->from_state_index, transition->rule ? transition->rule : ' ', transition->to_state_index);
+	}
+	printf("\t]\n");
+	printf("]\n");
 }
