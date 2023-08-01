@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 typedef struct {
 	size_t current_state;
 	size_t current_string_index;
@@ -274,4 +276,75 @@ int nfa_machine_execute(const nfa_machine* machine, const char* string)
 	nfa_machine_execution_SET_free(machine, SET_table);
 	free(stack);
 	return 0;
+}
+
+nfa_machine* nfa_machine_union(const nfa_machine* machine_a, const nfa_machine* machine_b)
+{
+	// we need to offset all the machine_b state indexes because they will overlap with machine_b
+	// find the maximum state index from machine_a to choose as the offset
+	size_t machine_a_max_state_index = machine_a->start_state_index;
+	{
+		for (size_t transition_index = 0; transition_index < machine_a->transitions_len; ++transition_index)
+		{
+			const nfa_transition* transition = &machine_a->transitions[transition_index];
+			machine_a_max_state_index = MAX(machine_a_max_state_index, transition->from_state_index);
+			machine_a_max_state_index = MAX(machine_a_max_state_index, transition->to_state_index);
+		}
+
+		for (size_t final_state_index = 0; final_state_index < machine_a->final_state_len; ++final_state_index)
+		{
+			machine_a_max_state_index = MAX(machine_a_max_state_index, machine_a->final_states[final_state_index]);
+		}
+	}
+
+	// All states need to be offset by at least 1 because we have a new initial state
+	size_t machine_a_state_index_offset = 1;
+	size_t machine_b_state_index_offset = machine_a_max_state_index + 1 + 1;
+
+	nfa_machine* machine_union = nfa_machine_alloc();
+	machine_union->final_state_len = machine_a->final_state_len + machine_b->final_state_len;
+	machine_union->final_states = malloc((machine_union->final_state_len) * sizeof(int));
+	{
+		// copy in machine_a final states
+		memcpy(machine_union->final_states, machine_a->final_states, machine_a->final_state_len * sizeof(int));
+		for (size_t index = 0; index < machine_a->final_state_len; ++index)
+		{
+			machine_union->final_states[index] += machine_a_state_index_offset;
+		}
+
+		// copy in machine_b final states
+		memcpy(machine_union->final_states + machine_a->final_state_len, machine_b->final_states, machine_b->final_state_len * sizeof(int));
+		for (size_t index = 0; index < machine_b->final_state_len; ++index)
+		{
+			machine_union->final_states[machine_a->final_state_len + index] += machine_b_state_index_offset;
+		}
+	}
+	machine_union->start_state_index = 0;
+
+	// Copy over all transitions
+	{
+		nfa_machine_add_transition(machine_union, 0, machine_a->start_state_index + machine_a_state_index_offset, NFA_EPSILON);
+		nfa_machine_add_transition(machine_union, 0, machine_b->start_state_index + machine_b_state_index_offset, NFA_EPSILON);
+
+		// machine_a
+		for (size_t transition_index = 0; transition_index < machine_a->transitions_len; ++transition_index)
+		{
+			const nfa_transition* transition = &machine_a->transitions[transition_index];
+			nfa_machine_add_transition(machine_union, transition->from_state_index + machine_a_state_index_offset, transition->to_state_index + machine_a_state_index_offset, transition->rule);
+		}
+
+		// machine_b
+		for (size_t transition_index = 0; transition_index < machine_b->transitions_len; ++transition_index)
+		{
+			const nfa_transition* transition = &machine_b->transitions[transition_index];
+			nfa_machine_add_transition(machine_union, transition->from_state_index + machine_b_state_index_offset, transition->to_state_index + machine_b_state_index_offset, transition->rule);
+		}
+	}
+
+	return machine_union;
+}
+
+nfa_machine* nfa_machine_concat(nfa_machine* machine_a, nfa_machine* machine_b)
+{
+	return NULL;
 }
