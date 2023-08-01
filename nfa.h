@@ -37,6 +37,9 @@ nfa_machine* nfa_machine_union(const nfa_machine* machine_a, const nfa_machine* 
 // Returns the concatenation of two NFAs, i.e. the final state(s) of machine_a is piped into the initial state of machine_b
 nfa_machine* nfa_machine_concat(const nfa_machine* machine_a, const nfa_machine* machine_b);
 
+// Returns the Kleene star of an NFA, i.e. a new NFA where you can take machine 0 times or any number of times
+nfa_machine* nfa_machine_kleene_star(const nfa_machine* machine);
+
 void nfa_machine_dump(const nfa_machine* machine);
 
 #endif

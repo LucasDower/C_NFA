@@ -297,6 +297,8 @@ size_t get_machine_max_state_index(const nfa_machine* machine)
 	return machine_max_state_index;
 }
 
+// TODO: Make new unique final state and add transitions from final states of machine_a and machine_b
+// instead of adding the final states together
 nfa_machine* nfa_machine_union(const nfa_machine* machine_a, const nfa_machine* machine_b)
 {
 	// we need to offset all the machine_b state indexes because they will overlap with machine_b
@@ -350,7 +352,7 @@ nfa_machine* nfa_machine_union(const nfa_machine* machine_a, const nfa_machine* 
 	return machine_union;
 }
 
-nfa_machine* nfa_machine_concat(nfa_machine* machine_a, nfa_machine* machine_b)
+nfa_machine* nfa_machine_concat(const nfa_machine* machine_a, const nfa_machine* machine_b)
 {
 	// we need to offset all the machine_b state indexes because they will overlap with machine_b
 	// find the maximum state index from machine_a to choose as the offset
@@ -390,6 +392,47 @@ nfa_machine* nfa_machine_concat(nfa_machine* machine_a, nfa_machine* machine_b)
 	}
 
 	return machine_concat;
+}
+
+nfa_machine* nfa_machine_kleene_star(const nfa_machine* machine)
+{
+	// 1. Copy transitions from machine
+	nfa_machine* machine_star = nfa_machine_alloc();
+	machine_star->transitions_len = machine->transitions_len;
+	machine_star->transitions = malloc(machine->transitions_len * sizeof(nfa_transition));
+	memcpy(machine_star->transitions, machine->transitions, machine->transitions_len * sizeof(nfa_transition));
+
+	// 2. Set the start state to a new state Q
+	size_t machine_max_state_index = get_machine_max_state_index(machine);
+	size_t state_index_q = machine_max_state_index + 1;
+	machine_star->start_state_index = state_index_q;
+
+	// 3. Add an e-transition from Q to the original start state
+	nfa_machine_add_transition(machine_star, state_index_q, machine->start_state_index, NFA_EPSILON);
+
+	// 4. Add a new single final state F
+	machine_star->final_states = malloc(sizeof(int));
+	size_t state_index_f = machine_max_state_index + 2;
+	machine_star->final_states[0] = state_index_f;
+	machine_star->final_state_len = 1;
+
+	// 5. Add e-transitions from all original final states to F
+	for (size_t index = 0; index < machine->final_state_len; ++index)
+	{
+		nfa_machine_add_transition(machine_star, machine->final_states[index], state_index_f, NFA_EPSILON);
+	}
+
+	// 6. Add a e-transition from Q to F
+	nfa_machine_add_transition(machine_star, state_index_q, state_index_f, NFA_EPSILON);
+
+	// 7. Add a e-transitions from original finals to original starts
+	// TODO: Can replace this with e-transition from F to Q? Should be equivalent but only adds 1 transition
+	for (size_t index = 0; index < machine->final_state_len; ++index)
+	{
+		nfa_machine_add_transition(machine_star, machine->final_states[index], machine->start_state_index, NFA_EPSILON);
+	}
+
+	return machine_star;
 }
 
 void nfa_machine_dump(const nfa_machine* machine)
