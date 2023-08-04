@@ -1,5 +1,5 @@
-#ifndef REGEX_H
-#define REGEX_H
+#ifndef C_NFA_REGEX_H
+#define C_NFA_REGEX_H
 
 typedef enum
 {

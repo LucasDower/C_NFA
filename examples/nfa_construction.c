@@ -15,8 +15,8 @@ int main()
         machine->final_state_len = 1;
         nfa_machine_add_transition(machine, 0 /*from*/, 1 /*to*/, 'a' /*rule*/);
         nfa_machine_add_transition(machine, 0, 2, 'b');
-        nfa_machine_add_transition(machine, 1, 2, NFA_EPSILON);
-        nfa_machine_add_transition(machine, 2, 1, NFA_EPSILON);
+        nfa_machine_add_transition(machine, 1, 2, C_NFA_EPSILON);
+        nfa_machine_add_transition(machine, 2, 1, C_NFA_EPSILON);
         nfa_machine_add_transition(machine, 1, 1, 'a');
         nfa_machine_add_transition(machine, 2, 2, 'b');
 
@@ -31,3 +31,4 @@ int main()
     nfa_machine_free(machine);
 
     return 0;
+}

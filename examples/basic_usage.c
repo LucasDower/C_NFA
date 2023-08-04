@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <c_nfa/regex.h>
+#include <c_nfa/core.h>
 
 int main()
 {

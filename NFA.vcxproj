@@ -132,13 +132,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="examples\basic_usage.c" />
+    <ClCompile Include="examples\nfa_construction.c" />
     <ClCompile Include="examples\regex_reuse.c" />
     <ClCompile Include="src\bridge.c" />
     <ClCompile Include="src\nfa.c" />
     <ClCompile Include="src\regex.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\c_nfa\bridge.h" />
+    <ClInclude Include="include\c_nfa\core.h" />
     <ClInclude Include="include\c_nfa\nfa.h" />
     <ClInclude Include="include\c_nfa\regex.h" />
     <ClInclude Include="src\util.h" />

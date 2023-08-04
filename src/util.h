@@ -1,5 +1,5 @@
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef C_NFA_UTIL_H
+#define C_NFA_UTIL_H
 
 #ifdef C_NFA_ASSERT_ENABLED
 #define C_NFA_ASSERT(condition) assert(condition)

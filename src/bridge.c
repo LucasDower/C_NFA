@@ -1,6 +1,6 @@
 #include <c_nfa/regex.h>
 #include <c_nfa/nfa.h>
-#include <c_nfa/bridge.h>
+#include <c_nfa/core.h>
 
 nfa_machine* handle_regex(const regex_t* regex)
 {
@@ -13,7 +13,7 @@ nfa_machine* handle_regex(const regex_t* regex)
             machine->final_states = malloc(sizeof(int));
             machine->final_states[0] = 1;
             machine->final_state_len = 1;
-            nfa_machine_add_transition(machine, 0, 1, NFA_EPSILON);
+            nfa_machine_add_transition(machine, 0, 1, C_NFA_EPSILON);
             return machine;
         }
         case CHAR:
@@ -54,7 +54,7 @@ nfa_machine* handle_regex(const regex_t* regex)
     }
 }
 
-nfa_machine* regex_to_nfa(const char* input)
+struct nfa_machine* regex_to_nfa(const char* input)
 {
     regex_t* regex = regex_parse(input);
     nfa_machine* machine = handle_regex(regex);
