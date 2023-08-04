@@ -3,7 +3,7 @@
 
 ### Usage
 ```c
-#include "bridge.h"
+#include <c_nfa/core.h>
 
 int main(void)
 {
@@ -17,8 +17,8 @@ int main(void)
 **Note**, the regex parser only supports basic regular expression operations such as concatenation, union, and Kleene star. There is no support for features such as wildcards or alternative quantifiers, etc.
 
 ```c
-#include "bridge.h"
-#include "nfa.h"
+#include <c_nfa/core.h>
+#include <c_nfa/nfa.h>
 
 #include <assert.h>
 
@@ -40,7 +40,7 @@ This library performs no compile-time optimisations, i.e. the regex is not conve
 `nfa.h` includes functions for manually building NFAs.
 
 ```c
-#include "nfa.h"
+#include <c_nfa/nfa.h>
 
 #include <stdlib.h>
 #include <assert.h>
