@@ -21,9 +21,15 @@
     <ClCompile Include="nfa.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="regex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nfa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="regex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

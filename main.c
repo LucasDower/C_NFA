@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <assert.h>
 
 #include "nfa.h"
+#include "regex.h"
 
 
 int main()
@@ -90,6 +90,12 @@ int main()
 	nfa_machine_free(machineB);
 	nfa_machine_free(machine_union);
 	nfa_machine_free(machine_concat);
+	nfa_machine_free(machine_star);
+
+	nfa_machine* machine = nfa_machine_construct("(c|a*b)");
+
+	regex_t* regex = regex_parse("(0|(1(01*(00)*0)*1)*)*");
+	regex_free(regex);
 
 	return 0;
 }

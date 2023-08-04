@@ -40,6 +40,9 @@ nfa_machine* nfa_machine_concat(const nfa_machine* machine_a, const nfa_machine*
 // Returns the Kleene star of an NFA, i.e. a new NFA where you can take machine 0 times or any number of times
 nfa_machine* nfa_machine_kleene_star(const nfa_machine* machine);
 
+// Returns a NFA equivalent to the given regex, only supports concatenation, union, and kleene star
+nfa_machine* nfa_machine_construct(const char* regex);
+
 void nfa_machine_dump(const nfa_machine* machine);
 
 #endif

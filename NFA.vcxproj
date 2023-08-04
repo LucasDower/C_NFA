@@ -131,9 +131,11 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
     <ClCompile Include="nfa.c" />
+    <ClCompile Include="regex.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nfa.h" />
+    <ClInclude Include="regex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
