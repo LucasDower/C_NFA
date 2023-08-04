@@ -15,28 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <ClCompile Include="src\nfa.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="nfa.c">
+    <ClCompile Include="src\regex.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="regex.c">
+    <ClCompile Include="src\bridge.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bridge.c">
+    <ClCompile Include="examples\basic_usage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\regex_reuse.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="nfa.h">
+    <ClInclude Include="include\c_nfa\regex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="regex.h">
+    <ClInclude Include="include\c_nfa\bridge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bridge.h">
+    <ClInclude Include="include\c_nfa\nfa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
   </ItemGroup>
 </Project>

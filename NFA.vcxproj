@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,15 +131,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bridge.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="nfa.c" />
-    <ClCompile Include="regex.c" />
+    <ClCompile Include="examples\basic_usage.c" />
+    <ClCompile Include="examples\regex_reuse.c" />
+    <ClCompile Include="src\bridge.c" />
+    <ClCompile Include="src\nfa.c" />
+    <ClCompile Include="src\regex.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bridge.h" />
-    <ClInclude Include="nfa.h" />
-    <ClInclude Include="regex.h" />
+    <ClInclude Include="include\c_nfa\bridge.h" />
+    <ClInclude Include="include\c_nfa\nfa.h" />
+    <ClInclude Include="include\c_nfa\regex.h" />
+    <ClInclude Include="src\util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

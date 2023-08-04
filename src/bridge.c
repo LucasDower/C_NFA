@@ -1,6 +1,6 @@
-#include "regex.h"
-#include "nfa.h"
-#include "bridge.h"
+#include <c_nfa/regex.h>
+#include <c_nfa/nfa.h>
+#include <c_nfa/bridge.h>
 
 nfa_machine* handle_regex(const regex_t* regex)
 {

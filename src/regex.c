@@ -3,8 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "regex.h"
-
+#include <c_nfa/regex.h>
 
 typedef struct
 {

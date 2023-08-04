@@ -1,10 +1,9 @@
-#include "nfa.h"
+#include <c_nfa/nfa.h>
 
+#include "util.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <assert.h>
 
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct {
 	size_t current_state;
@@ -87,7 +86,7 @@ void nfa_machine_execution_stack_push(nfa_machine_execution_stack* stack, size_t
 	}
 	else
 	{
-		assert(stack->context != NULL);
+		C_NFA_ASSERT(stack->context != NULL);
 		stack->context = realloc(stack->context, sizeof(nfa_machine_execution_context) * (stack->context_len + 1));
 	}
 
@@ -113,7 +112,7 @@ int nfa_machine_execution_stack_pop(nfa_machine_execution_stack* stack, nfa_mach
 	top->current_state = tmp.current_state;
 	top->current_string_index = tmp.current_string_index;
 
-	assert(stack->context != NULL);
+	C_NFA_ASSERT(stack->context != NULL);
 	stack->context = realloc(stack->context, sizeof(nfa_machine_execution_context) * (stack->context_len - 1));
 	--stack->context_len;
 
@@ -170,7 +169,7 @@ void nfa_machine_execution_SET_add(const nfa_machine* machine, nfa_machine_SET_e
 	}
 	else
 	{
-		assert(entry->contexts != NULL);
+		C_NFA_ASSERT(entry->contexts != NULL);
 		entry->contexts = realloc(entry->contexts, sizeof(nfa_machine_execution_context) * (entry->contexts_len + 1));
 	}
 
@@ -285,13 +284,13 @@ size_t get_machine_max_state_index(const nfa_machine* machine)
 	for (size_t transition_index = 0; transition_index < machine->transitions_len; ++transition_index)
 	{
 		const nfa_transition* transition = &machine->transitions[transition_index];
-		machine_max_state_index = MAX(machine_max_state_index, transition->from_state_index);
-		machine_max_state_index = MAX(machine_max_state_index, transition->to_state_index);
+		machine_max_state_index = C_NFA_MAX(machine_max_state_index, transition->from_state_index);
+		machine_max_state_index = C_NFA_MAX(machine_max_state_index, transition->to_state_index);
 	}
 
 	for (size_t final_state_index = 0; final_state_index < machine->final_state_len; ++final_state_index)
 	{
-		machine_max_state_index = MAX(machine_max_state_index, machine->final_states[final_state_index]);
+		machine_max_state_index = C_NFA_MAX(machine_max_state_index, machine->final_states[final_state_index]);
 	}
 
 	return machine_max_state_index;
