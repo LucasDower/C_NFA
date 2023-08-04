@@ -4,7 +4,7 @@
 
 #include "nfa.h"
 #include "regex.h"
-
+#include "bridge.h"
 
 int main()
 {
@@ -77,8 +77,8 @@ int main()
 
 	nfa_machine* machine_star = nfa_machine_kleene_star(machineB);
 	{
-		nfa_machine_dump(machine_star);
-
+		//nfa_machine_dump(machine_star);
+		
 		assert(nfa_machine_execute(machine_star, "") == 1);
 		assert(nfa_machine_execute(machine_star, "cd") == 1);
 		assert(nfa_machine_execute(machine_star, "cdcd") == 1);
@@ -92,10 +92,26 @@ int main()
 	nfa_machine_free(machine_concat);
 	nfa_machine_free(machine_star);
 
-	nfa_machine* machine = nfa_machine_construct("(c|a*b)");
-
 	regex_t* regex = regex_parse("(0|(1(01*(00)*0)*1)*)*");
 	regex_free(regex);
+
+	nfa_machine* my_machine = regex_to_nfa("(c|a*b)");
+	{
+		assert(nfa_machine_execute(my_machine, "c") == 1);
+		assert(nfa_machine_execute(my_machine, "b") == 1);
+		assert(nfa_machine_execute(my_machine, "a") == 0);
+		assert(nfa_machine_execute(my_machine, "ab") == 1);
+	}
+	nfa_machine_dump(my_machine);
+	nfa_machine_free(my_machine);
+
+	assert(regex_execute("ab*c", "abbbbbbbc") == 1);
+
+	// regex describes the set of binary numbers that are multiples of 3
+	const char* regex_multiples_of_three = "(0|(1(01*(00)*0)*1)*)*";
+
+	assert(regex_execute(regex_multiples_of_three, "1111") == 1);
+	assert(regex_execute(regex_multiples_of_three, "10000") == 0);
 
 	return 0;
 }

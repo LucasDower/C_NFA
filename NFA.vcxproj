@@ -129,11 +129,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bridge.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="nfa.c" />
     <ClCompile Include="regex.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bridge.h" />
     <ClInclude Include="nfa.h" />
     <ClInclude Include="regex.h" />
   </ItemGroup>

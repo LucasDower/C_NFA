@@ -1,6 +1,8 @@
 #ifndef NFA_H
 #define NFA_H
 
+#include <stdlib.h>
+
 #define NFA_EPSILON 0
 
 typedef struct

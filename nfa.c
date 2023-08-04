@@ -475,8 +475,3 @@ nfa_machine* nfa_machine_construct_internal(const char* regex, size_t start, siz
 	// or * if kleene star operation
 	// otherwise concat operation, then consume next regular expression
 }
-
-nfa_machine* nfa_machine_construct(const char* regex)
-{
-	return nfa_machine_construct_internal(regex, 0, strlen(regex) + 1);
-}
