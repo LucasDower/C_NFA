@@ -458,19 +458,3 @@ void nfa_machine_dump(const nfa_machine* machine)
 	printf("\t]\n");
 	printf("]\n");
 }
-
-// Reads from start up until end but not including end
-nfa_machine* nfa_machine_construct_internal(const char* regex, size_t start, size_t end)
-{
-	int is_operation = regex[start] == '(';
-	if (is_operation)
-	{
-
-	}
-
-	// consume regular expression
-
-	// next token | if union operation
-	// or * if kleene star operation
-	// otherwise concat operation, then consume next regular expression
-}

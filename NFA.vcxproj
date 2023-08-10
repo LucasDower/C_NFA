@@ -131,12 +131,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\basic_usage.c" />
-    <ClCompile Include="examples\nfa_construction.c" />
-    <ClCompile Include="examples\regex_reuse.c" />
     <ClCompile Include="src\bridge.c" />
     <ClCompile Include="src\nfa.c" />
     <ClCompile Include="src\regex.c" />
+    <ClCompile Include="tests\tests.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\c_nfa\core.h" />

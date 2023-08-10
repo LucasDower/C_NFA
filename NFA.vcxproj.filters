@@ -24,13 +24,7 @@
     <ClCompile Include="src\bridge.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\basic_usage.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\regex_reuse.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\nfa_construction.c">
+    <ClCompile Include="tests\tests.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
